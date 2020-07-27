@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
     <title>Hello!</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,23 +19,22 @@
 
     <!-- import the webpage's javascript file -->
     <script>
-        AFRAME.registerComponent("vidhandler", {
+        AFRAME.registerComponent("soundhandler", {
             // ...
             init: function () {
                 // Set up initial state and variables.
-                this.toggle = false;
-                this.vid = document.querySelector("#vid");
-                this.vid.pause();
+                //   this.toggle = false;
+                this.vid = document.querySelector('[sound]');
+
+                //   this.vid.pause();
             },
             tick: function () {
-                if (this.el.object3D.visible == true) {
-                    if (!this.toggle) {
-                        this.toggle = true;
-                        this.vid.play();
-                    }
+                if (document.querySelector('a-marker').object3D.visible == true) {
+                    this.vid.components.sound.playSound();
+                    console.log("start");
                 } else {
-                    this.toggle = false;
-                    this.vid.pause();
+                    this.vid.components.sound.pauseSound();
+                    console.log("pause");
                 }
             }
         });</script>
@@ -45,21 +43,16 @@
     <a-scene vr-mode-ui="enabled: false" artoolkit='sourceType: webcam; detectionMode: mono; maxDetectionRate: 90;' arjs='debugUIEnabled: false;detectionMode: mono_and_matrix; matrixCodeType: 3x3;'>
 
         <a-assets>
-            <video muted id="vid" response-type="arraybuffer" loop="false" crossorigin webkit-playsinline playsinline controls>
-                <source src="https://cdn.glitch.com/5a71bb31-57f6-4304-9c91-437ed4041d3a%2Feby2.mp4?v=1562502183600" type="video/mp4">
-            </video>
+            <audio id="sound" src="file_example_MP3_700KB.mp3" preload="auto" crossorigin="anonymous"></audio>
+
         </a-assets>
 
-        <a-marker type="pattern" preset="hiro" vidhandler>
-            <a-entity position="0 0 0">
-                <a-video width="7" height="3" rotation="-90 0 0" material='transparent:true;shader:flat;side:double;src:#vid'></a-video>
-            </a-entity>
+        <a-marker preset="hiro">
+            <a-box position='0 0.5 0' material='color: red;' soundhandler>
+            </a-box>
         </a-marker>
-
-        <a-entity camera>
-            <a-entity cursor="rayOrigin: mouse;fuse: false;"></a-entity>
-        </a-entity>
-
+        <a-entity sound="src: #sound" autoplay="false"></a-entity>
+        <a-entity camera></a-entity>
     </a-scene>
 
     </body>
